@@ -26,9 +26,6 @@ public class BookingController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	User registration(@RequestBody User user) {
 		System.out.println("From register method" + user.getFirstName());
-		// return new User("Rahul","Ram","rahulram03@gmail.com","0432657525");
-		// //repository.save(newuser);
-		//return repository.save(user);
 		return null;
 	}
 
