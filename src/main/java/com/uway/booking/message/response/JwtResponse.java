@@ -7,12 +7,12 @@ import org.springframework.security.core.GrantedAuthority;
 public class JwtResponse {
 	private String token;
 	private String type = "Bearer";
-	private String username;
+	private String userName;
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public JwtResponse(String accessToken, String username, Collection<? extends GrantedAuthority> authorities) {
+	public JwtResponse(String accessToken, String userName, Collection<? extends GrantedAuthority> authorities) {
 		this.token = accessToken;
-		this.username = username;
+		this.userName = userName;
 		this.authorities = authorities;
 	}
 
@@ -32,12 +32,12 @@ public class JwtResponse {
 		this.type = tokenType;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
     public Collection<? extends GrantedAuthority> getAuthorities() {
