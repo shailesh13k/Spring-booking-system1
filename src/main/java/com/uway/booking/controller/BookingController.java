@@ -1,8 +1,10 @@
 package com.uway.booking.controller;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,7 @@ import com.uway.booking.model.UserOrder;
 import com.uway.booking.repository.UserDocumentRepository;
 import com.uway.booking.repository.UserOrderRepository;
 import com.uway.booking.repository.UserRepository;
+import com.uway.booking.service.EmailSenderService;
 import com.uway.booking.uploadmultiple.service.DocumentStorageService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -58,6 +61,10 @@ public class BookingController {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	EmailSenderService emailSenderService;
+
 	
 	@Autowired
 	UserDocumentRepository userDocumentRepository;
@@ -92,6 +99,16 @@ public class BookingController {
 
 			String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadFile/")
 					.path(fileName).toUriString();
+			
+			try {
+				emailSenderService.sendEmail(user.getEmail(), "File Upload Sucessfully", user.getFirstName() + " " + user.getLastName());
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			return ResponseEntity.status(HttpStatus.OK).body(new UploadFileResponse(fileName, fileDownloadUri,
 					file.getContentType(), file.getSize(), "File Uploaded Successfully"));

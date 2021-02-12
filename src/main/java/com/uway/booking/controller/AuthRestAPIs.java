@@ -1,5 +1,8 @@
 package com.uway.booking.controller;
 
+import java.io.IOException;
+
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import com.uway.booking.message.response.ResponseMessage;
 import com.uway.booking.model.User;
 import com.uway.booking.repository.UserRepository;
 import com.uway.booking.security.jwt.JwtTokenUtil;
+import com.uway.booking.service.EmailSenderService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -30,6 +34,9 @@ public class AuthRestAPIs {
 
 	@Autowired
 	AuthenticationManager authenticationManager;
+	
+	@Autowired
+	EmailSenderService emailSenderService;
 
 	@Autowired
 	UserRepository userRepository;
@@ -65,6 +72,16 @@ public class AuthRestAPIs {
 				encoder.encode(signUpRequest.getPassword()), signUpRequest.getMobile());
 		//System.out.println(encoder.encode(signUpRequest.getPassword()));
 		userRepository.save(user);
+		
+	try {
+		emailSenderService.sendEmail(user.getEmail(), "Welcome to UWay software", user.getFirstName() + " " + user.getLastName());
+	} catch (MessagingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 
 		return new ResponseEntity<>(
 				new ResponseMessage("User " + signUpRequest.getFirstName() + " is registered successfully!"),
